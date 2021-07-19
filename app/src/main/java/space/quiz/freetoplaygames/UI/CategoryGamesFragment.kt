@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -35,7 +36,6 @@ class CategoryGamesFragment : Fragment() {
         // Inflate the layout for this fragment
         mBinding = FragmentCategoryGamesBinding.inflate(layoutInflater)
         createViewModel()
-
         return mBinding.root
     }
 
@@ -71,6 +71,10 @@ class CategoryGamesFragment : Fragment() {
         rv.adapter = adapter
 //        rv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 //        rv.adapter = adapter
+    }
+
+    private fun createSpinner(){
+//        val arrayAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.games_category, mBinding.categorySpinner)
     }
 
 }

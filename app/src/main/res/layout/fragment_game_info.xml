@@ -187,6 +187,7 @@
                 android:layout_margin="16dp"
                 android:padding="15dp"
                 android:background="@drawable/oval"
+                android:layout_marginBottom="16dp"
                 >
                 <TextView
                     android:id="@+id/fragment_game_info_min_sys_title"
