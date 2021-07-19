@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">FreeToPlay Games</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pc_games_title">Free games for PC</string>
+    <string name="browser_games_title">Free games for browser</string>
+    <string name="genre_title">Жанр:</string>
+    <string name="developer_title">Разработчик:</string>
+    <string name="publisher_title">Издатель:</string>
+    <string name="release_date_title">Дата релиза:</string>
+    <string name="min_sys_title">Минимальные требования</string>
+    <string name="min_os_title">ОС:</string>
+    <string name="min_processor_title">Процессор:</string>
+    <string name="min_memory_title">Оперативная память:</string>
+    <string name="min_graphics_title">Видеокарта:</string>
+    <string name="min_storage_title">Место на диске:</string>
+    <string name="main_info">Основная информация</string>
+
+    <string-array name="games_category">
+        <item>mmorpg</item>
+        <item>shooter</item>
+        <item>strategy</item>
+        <item>moba</item>
+        <item>racing</item>
+        <item>sports</item>
+        <item>social</item>
+        <item>sandbox</item>
+        <item>open-world</item>
+        <item>survival</item>
+        <item>pvp</item>
+        <item>pve</item>
+        <item>voxel</item>
+        <item>zombie</item>
+        <item>turn-based</item>
+        <item>first-person</item>
+        <item>third-person</item>
+        <item>top-down</item>
+        <item>tank</item>
+        <item>space</item>
+    </string-array>
+</resources>
