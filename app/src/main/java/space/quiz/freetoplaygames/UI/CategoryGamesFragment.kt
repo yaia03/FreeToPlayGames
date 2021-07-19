@@ -25,6 +25,7 @@ class CategoryGamesFragment : Fragment() {
 
     private lateinit var mBinding: FragmentCategoryGamesBinding
     private lateinit var viewModel: CategoryGameViewModel
+    private lateinit var gamesList: List<Game>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +58,8 @@ class CategoryGamesFragment : Fragment() {
         viewModel.categoryResponse.observe(viewLifecycleOwner, Observer { response ->
             if (response.isSuccessful){
                 Log.d("Response", response.body().toString())
-                createRv(response.body()!!, mBinding.categoryRv)
+                gamesList = response.body()!!
+                createRv(gamesList, mBinding.categoryRv)
             }
         })
     }
@@ -70,6 +72,8 @@ class CategoryGamesFragment : Fragment() {
         rv.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
         rv.setHasFixedSize(true)
         rv.adapter = adapter
+//        rv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+//        rv.adapter = adapter
     }
 
 }
