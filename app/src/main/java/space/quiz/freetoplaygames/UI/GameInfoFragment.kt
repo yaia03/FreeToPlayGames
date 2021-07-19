@@ -1,5 +1,6 @@
 package space.quiz.freetoplaygames.UI
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ExpandableListAdapter
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -35,6 +37,7 @@ class GameInfoFragment : Fragment() {
     private lateinit var viewModel: GameInfoViewModel
     private lateinit var textView: ExpandableTextView
     private lateinit var gameImage: ImageView
+    private lateinit var download: ImageButton
     private lateinit var gameName: TextView
     private lateinit var gameDeveloper: TextView
     private lateinit var gamePublisher: TextView
@@ -90,6 +93,7 @@ class GameInfoFragment : Fragment() {
         minProc = root.findViewById(R.id.fragment_game_info_min_processor)
         minStorage = root.findViewById(R.id.fragment_game_info_min_storage)
         gameGenre = root.findViewById(R.id.fragment_game_info_genre)
+        download = root.findViewById(R.id.fragment_game_info_download)
     }
 
     private fun getGame(){
@@ -122,6 +126,9 @@ class GameInfoFragment : Fragment() {
         minMemory.text = game.minimum_system_requirements?.memory
         minGraph.text = game.minimum_system_requirements?.graphics
         gameGenre.text = game.genre
+        download.setOnClickListener(View.OnClickListener {
+            openWebsite(game.game_url)
+        })
     }
 
     private fun createRv(list: List<Screenshot>, rv: RecyclerView){
@@ -143,5 +150,10 @@ class GameInfoFragment : Fragment() {
             .addToBackStack(null)
             .replace(R.id.main_fragment_container, fragment)
             .commit()
+    }
+
+    private fun openWebsite(uri: String){
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        startActivity(intent)
     }
 }

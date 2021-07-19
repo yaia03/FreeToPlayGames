@@ -17,6 +17,7 @@
     <string name="main_info">Основная информация</string>
 
     <string-array name="games_category">
+        <item>all</item>
         <item>mmorpg</item>
         <item>shooter</item>
         <item>strategy</item>
@@ -37,5 +38,29 @@
         <item>top-down</item>
         <item>tank</item>
         <item>space</item>
+        <item>sailing</item>
+        <item>side-scroller</item>
+        <item>superhero</item>
+        <item>permadeath</item>
+        <item>card</item>
+        <item>battle-royale</item>
+        <item>mmo</item>
+        <item>mmofps</item>
+        <item>3d</item>
+        <item>2d</item>
+        <item>mmotps</item>
+        <item>anime</item>
+        <item>fantasy</item>
+        <item>sci-fi</item>
+        <item>fighting</item>
+        <item>action-rpg</item>
+        <item>action</item>
+        <item>military</item>
+        <item>martial-arts</item>
+        <item>flight</item>
+        <item>low-spec</item>
+        <item>tower-defense</item>
+        <item>horror</item>
+        <item>mmorts</item>
     </string-array>
 </resources>

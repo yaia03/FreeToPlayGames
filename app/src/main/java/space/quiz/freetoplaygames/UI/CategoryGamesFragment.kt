@@ -2,12 +2,11 @@ package space.quiz.freetoplaygames.UI
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +25,7 @@ class CategoryGamesFragment : Fragment() {
     private lateinit var mBinding: FragmentCategoryGamesBinding
     private lateinit var viewModel: CategoryGameViewModel
     private lateinit var gamesList: List<Game>
+    private lateinit var adapter: CategoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +34,7 @@ class CategoryGamesFragment : Fragment() {
         // Inflate the layout for this fragment
         mBinding = FragmentCategoryGamesBinding.inflate(layoutInflater)
         createViewModel()
+        setHasOptionsMenu(true)
         return mBinding.root
     }
 
@@ -42,6 +43,23 @@ class CategoryGamesFragment : Fragment() {
         createSpinner()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main, menu)
+        val menuItem = menu.findItem(R.id.search_icon)
+        val searchView = menuItem.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filter(newText!!)
+                return true
+            }
+
+        })
+        super.onCreateOptionsMenu(menu, inflater)
+    }
     private fun createViewModel(){
         val repository = Repository()
         val categoryGameViewModelFactory = CategoryGameViewModelFactory(repository)
@@ -49,7 +67,7 @@ class CategoryGamesFragment : Fragment() {
                 .get(CategoryGameViewModel::class.java)
     }
 
-    private fun loadCategory(category: String){
+    private fun loadCategory(category: String?){
         viewModel.getCategory(category)
         viewModel.categoryResponse.observe(viewLifecycleOwner, Observer { response ->
             if (response.isSuccessful){
@@ -61,7 +79,7 @@ class CategoryGamesFragment : Fragment() {
     }
 
     private fun createRv(list: List<Game>, rv: RecyclerView){
-        val adapter = CategoryAdapter(list, object : GameOnClickListener{
+        adapter = CategoryAdapter(list, object : GameOnClickListener{
             override fun onClicked(game: Game) {
                 openFragment(game)
             }
@@ -72,12 +90,15 @@ class CategoryGamesFragment : Fragment() {
 
     private fun createSpinner(){
         var categories = resources.getStringArray(R.array.games_category)
-        val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, categories)
-        mBinding.categorySpinner.adapter = adapter
-        mBinding.categorySpinner.setSelection(adapter.getPosition(arguments?.getString("CATEGORY")!!))
+        val arrayAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, categories)
+        mBinding.categorySpinner.adapter = arrayAdapter
+        mBinding.categorySpinner.setSelection(arrayAdapter.getPosition(arguments?.getString("CATEGORY")!!))
         mBinding.categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                loadCategory(categories[position])
+                if (position == 0)
+                    loadCategory(null)
+                else
+                    loadCategory(categories[position])
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -97,6 +118,16 @@ class CategoryGamesFragment : Fragment() {
                 .addToBackStack(null)
                 .replace(R.id.main_fragment_container, fragment)
                 .commit()
+    }
+
+    private fun filter(text: String){
+        val filterList = arrayListOf<Game>()
+        for (game in gamesList){
+            if (game.title.toLowerCase().contains(text.toLowerCase())){
+                filterList.add(game)
+            }
+        }
+        adapter.filterList(filterList)
     }
 
 }

@@ -37,4 +37,10 @@ class CategoryAdapter(private var gameList: List<Game>, private val onClickListe
     override fun getItemCount(): Int {
         return gameList.size
     }
+
+    fun filterList(filterList: List<Game>){
+        gameList = filterList
+        notifyDataSetChanged()
+    }
+
 }
