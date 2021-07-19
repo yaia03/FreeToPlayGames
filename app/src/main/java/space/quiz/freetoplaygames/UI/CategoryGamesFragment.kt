@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import space.quiz.freetoplaygames.Models.Game
 import space.quiz.freetoplaygames.R
 import space.quiz.freetoplaygames.Repository.Repository
+import space.quiz.freetoplaygames.UI.adapters.CategoryAdapter
 import space.quiz.freetoplaygames.UI.adapters.GameOnClickListener
 import space.quiz.freetoplaygames.UI.adapters.GamesAdapter
 import space.quiz.freetoplaygames.ViewModels.CategoryGameViewModel
@@ -34,9 +35,6 @@ class CategoryGamesFragment : Fragment() {
         // Inflate the layout for this fragment
         mBinding = FragmentCategoryGamesBinding.inflate(layoutInflater)
         createViewModel()
-
-//        if (arguments?.getString("CATEGORY") != null)
-//        loadCategory(arguments?.getString("CATEGORY")!!)
 
         return mBinding.root
     }
@@ -65,12 +63,11 @@ class CategoryGamesFragment : Fragment() {
     }
 
     private fun createRv(list: List<Game>, rv: RecyclerView){
-        val adapter = GamesAdapter(list, object : GameOnClickListener{
+        val adapter = CategoryAdapter(list, object : GameOnClickListener{
             override fun onClicked(game: Game) {
             }
         }, requireContext())
-        rv.layoutManager = GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false)
-        rv.setHasFixedSize(true)
+        rv.layoutManager = LinearLayoutManager(activity)
         rv.adapter = adapter
 //        rv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 //        rv.adapter = adapter
