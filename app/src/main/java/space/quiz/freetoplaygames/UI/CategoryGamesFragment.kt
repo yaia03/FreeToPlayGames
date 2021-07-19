@@ -1,16 +1,15 @@
 package space.quiz.freetoplaygames.UI
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import space.quiz.freetoplaygames.Models.Game
@@ -18,7 +17,6 @@ import space.quiz.freetoplaygames.R
 import space.quiz.freetoplaygames.Repository.Repository
 import space.quiz.freetoplaygames.UI.adapters.CategoryAdapter
 import space.quiz.freetoplaygames.UI.adapters.GameOnClickListener
-import space.quiz.freetoplaygames.UI.adapters.GamesAdapter
 import space.quiz.freetoplaygames.ViewModels.CategoryGameViewModel
 import space.quiz.freetoplaygames.ViewModels.CategoryGameViewModelFactory
 import space.quiz.freetoplaygames.databinding.FragmentCategoryGamesBinding
@@ -41,7 +39,7 @@ class CategoryGamesFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        loadCategory(arguments?.getString("CATEGORY")!!)
+        createSpinner()
     }
 
     private fun createViewModel(){
@@ -65,16 +63,40 @@ class CategoryGamesFragment : Fragment() {
     private fun createRv(list: List<Game>, rv: RecyclerView){
         val adapter = CategoryAdapter(list, object : GameOnClickListener{
             override fun onClicked(game: Game) {
+                openFragment(game)
             }
         }, requireContext())
         rv.layoutManager = LinearLayoutManager(activity)
         rv.adapter = adapter
-//        rv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-//        rv.adapter = adapter
     }
 
     private fun createSpinner(){
-//        val arrayAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.games_category, mBinding.categorySpinner)
+        var categories = resources.getStringArray(R.array.games_category)
+        val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, categories)
+        mBinding.categorySpinner.adapter = adapter
+        mBinding.categorySpinner.setSelection(adapter.getPosition(arguments?.getString("CATEGORY")!!))
+        mBinding.categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                loadCategory(categories[position])
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                loadCategory(arguments?.getString("CATEGORY")!!)
+            }
+        }
+    }
+
+    private fun openFragment(game: Game){
+        val fragment = GameInfoFragment()
+        val args = Bundle().apply {
+            putInt("GAME_ID", game.id)
+        }
+        fragment.arguments = args
+        parentFragmentManager
+                .beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.main_fragment_container, fragment)
+                .commit()
     }
 
 }
