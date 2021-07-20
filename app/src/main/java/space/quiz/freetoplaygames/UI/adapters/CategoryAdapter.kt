@@ -42,5 +42,4 @@ class CategoryAdapter(private var gameList: List<Game>, private val onClickListe
         gameList = filterList
         notifyDataSetChanged()
     }
-
 }

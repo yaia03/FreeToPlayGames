@@ -25,6 +25,9 @@ class AllGamesFragment : Fragment() {
     private lateinit var mBinding: FragmentAllGamesBinding
     private lateinit var viewModel: AllGamesViewModel
     private lateinit var gamesList: List<Game>
+    private lateinit var gamesListPc: List<Game>
+    private lateinit var adapterPC: GamesAdapter
+    private lateinit var adapterBrowser: GamesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,8 +35,19 @@ class AllGamesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = FragmentAllGamesBinding.inflate(layoutInflater)
+        startShimmer()
         initFunc()
         return mBinding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        gamesList = arrayListOf()
+        adapterBrowser = createAdapter(gamesList)
+        gamesListPc = arrayListOf()
+        adapterPC = createAdapter(gamesListPc)
+        createRV(mBinding.allGamesFragmentBrowserRv, adapterBrowser)
+        createRV(mBinding.allGamesFragmentPcRv, adapterPC)
     }
 
     private fun initFunc(){
@@ -45,8 +59,10 @@ class AllGamesFragment : Fragment() {
         viewModel.pcGamesResponse.observe(viewLifecycleOwner, Observer { response ->
             if (response.isSuccessful){
                 Log.d("Response", response.body().toString())
-                gamesList = response.body()!!
-                createRV(gamesList, mBinding.allGamesFragmentPcRv)
+                gamesListPc = response.body()!!
+                adapterPC.filterList(gamesListPc.slice(0..5))
+                mBinding.allGamesFragmentPcRv.visibility = View.VISIBLE
+                mBinding.allGamesFragmentShimmer1.visibility = View.INVISIBLE
             }
             else
                 Log.d("Response", response.errorBody().toString())
@@ -56,21 +72,27 @@ class AllGamesFragment : Fragment() {
             if (response.isSuccessful){
                 Log.d("Response", response.body().toString())
                 gamesList = response.body()!!
-                createRV(gamesList, mBinding.allGamesFragmentBrowserRv)
+                adapterBrowser.filterList(gamesList.slice(0..5))
+                mBinding.allGamesFragmentBrowserRv.visibility = View.VISIBLE
+                mBinding.allGamesFragmentShimmer2.visibility = View.INVISIBLE
             }
             else
                 Log.d("Response", response.errorBody().toString())
         })
     }
 
-    private fun createRV(list: List<Game>, rv: RecyclerView){
+    private fun createRV(rv: RecyclerView, adapter: GamesAdapter){
+        rv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        rv.adapter = adapter
+    }
+
+    private fun createAdapter(list: List<Game>): GamesAdapter{
         val adapter = GamesAdapter(list, object : GameOnClickListener {
             override fun onClicked(game: Game) {
                 openFragment(game)
             }
         }, requireContext())
-        rv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        rv.adapter = adapter
+        return adapter
     }
 
     private fun openFragment(game: Game){
@@ -84,5 +106,10 @@ class AllGamesFragment : Fragment() {
             .addToBackStack(null)
             .replace(R.id.main_fragment_container, fragment)
             .commit()
+    }
+
+    private fun startShimmer(){
+        mBinding.allGamesFragmentShimmer1.startShimmerAnimation()
+        mBinding.allGamesFragmentShimmer2.startShimmerAnimation()
     }
 }

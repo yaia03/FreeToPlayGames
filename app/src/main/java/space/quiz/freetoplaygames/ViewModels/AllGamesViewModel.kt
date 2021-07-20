@@ -13,6 +13,7 @@ class AllGamesViewModel(private val repository: Repository): ViewModel() {
     var pcGamesResponse: MutableLiveData<Response<List<Game>>> = MutableLiveData()
     var browserGamesResponse: MutableLiveData<Response<List<Game>>> = MutableLiveData()
 
+
     fun getGames(): MutableLiveData<Response<List<Game>>>{
         if (gamesResponse.value == null)
             loadGames()

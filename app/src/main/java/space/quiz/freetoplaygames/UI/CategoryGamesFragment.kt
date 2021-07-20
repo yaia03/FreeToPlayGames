@@ -33,6 +33,7 @@ class CategoryGamesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = FragmentCategoryGamesBinding.inflate(layoutInflater)
+        mBinding.categoryShimmer.startShimmerAnimation()
         createViewModel()
         setHasOptionsMenu(true)
         return mBinding.root
@@ -41,6 +42,20 @@ class CategoryGamesFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         createSpinner()
+        gamesList = arrayListOf()
+        createRv(gamesList, mBinding.categoryRv)
+
+        viewModel.categoryPosition.observe(this, Observer {
+            if (it != "all")
+                loadCategory(it)
+            else
+                loadCategory(null)
+        })
+    }
+
+    override fun onDestroy() {
+        arguments?.clear()
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -60,6 +75,7 @@ class CategoryGamesFragment : Fragment() {
         })
         super.onCreateOptionsMenu(menu, inflater)
     }
+
     private fun createViewModel(){
         val repository = Repository()
         val categoryGameViewModelFactory = CategoryGameViewModelFactory(repository)
@@ -73,7 +89,10 @@ class CategoryGamesFragment : Fragment() {
             if (response.isSuccessful){
                 Log.d("Response", response.body().toString())
                 gamesList = response.body()!!
-                createRv(gamesList, mBinding.categoryRv)
+
+                adapter.filterList(gamesList)
+                mBinding.categoryRv.visibility = View.VISIBLE
+                mBinding.categoryShimmer.visibility = View.INVISIBLE
             }
         })
     }
@@ -92,17 +111,17 @@ class CategoryGamesFragment : Fragment() {
         var categories = resources.getStringArray(R.array.games_category)
         val arrayAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, categories)
         mBinding.categorySpinner.adapter = arrayAdapter
-        mBinding.categorySpinner.setSelection(arrayAdapter.getPosition(arguments?.getString("CATEGORY")!!))
+        if (arguments?.getString("CATEGORY") != null){
+            mBinding.categorySpinner.setSelection(arrayAdapter.getPosition(arguments?.getString("CATEGORY")))
+        }
+        else
+            mBinding.categorySpinner.setSelection(arrayAdapter.getPosition(viewModel.categoryPosition.value))
         mBinding.categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == 0)
-                    loadCategory(null)
-                else
-                    loadCategory(categories[position])
+                viewModel.categoryPosition.postValue(categories[position])
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                loadCategory(arguments?.getString("CATEGORY")!!)
             }
         }
     }

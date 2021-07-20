@@ -8,28 +8,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ExpandableListAdapter
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.ms.square.android.expandabletextview.ExpandableTextView
 import space.quiz.freetoplaygames.Models.Game
 import space.quiz.freetoplaygames.Models.Screenshot
 import space.quiz.freetoplaygames.R
 import space.quiz.freetoplaygames.Repository.Repository
-import space.quiz.freetoplaygames.UI.adapters.GameOnClickListener
-import space.quiz.freetoplaygames.UI.adapters.GamesAdapter
 import space.quiz.freetoplaygames.UI.adapters.ScreenOnClickListener
 import space.quiz.freetoplaygames.UI.adapters.ScreenshotAdapter
 import space.quiz.freetoplaygames.ViewModels.GameInfoViewModel
 import space.quiz.freetoplaygames.ViewModels.GameInfoViewModelFactory
-import space.quiz.freetoplaygames.databinding.FragmentAllGamesBinding
-import space.quiz.freetoplaygames.databinding.FragmentGameInfoBinding
 
 
 class GameInfoFragment : Fragment() {
@@ -49,6 +43,8 @@ class GameInfoFragment : Fragment() {
     private lateinit var minMemory: TextView
     private lateinit var minGraph: TextView
     private lateinit var minStorage: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var scrollView: ScrollView
     private lateinit var root: View
 
     override fun onCreateView(
@@ -61,7 +57,6 @@ class GameInfoFragment : Fragment() {
         init()
         return root
     }
-
     override fun onStart() {
         super.onStart()
         getGame()
@@ -94,6 +89,8 @@ class GameInfoFragment : Fragment() {
         minStorage = root.findViewById(R.id.fragment_game_info_min_storage)
         gameGenre = root.findViewById(R.id.fragment_game_info_genre)
         download = root.findViewById(R.id.fragment_game_info_download)
+        progressBar = root.findViewById(R.id.game_info_progress_bar)
+        scrollView = root.findViewById(R.id.game_info_scroll_view)
     }
 
     private fun getGame(){
@@ -104,6 +101,8 @@ class GameInfoFragment : Fragment() {
                 Log.d("Response", reponse.body().toString())
                 createRv(reponse.body()?.screenshots!!, screenRv)
                 outInfo(reponse.body()!!)
+                progressBar.visibility = View.INVISIBLE
+                scrollView.visibility = View.VISIBLE
             }
             else
                 Log.d("Response", reponse.errorBody().toString())

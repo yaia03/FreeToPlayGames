@@ -15,6 +15,7 @@
     <string name="min_graphics_title">Видеокарта:</string>
     <string name="min_storage_title">Место на диске:</string>
     <string name="main_info">Основная информация</string>
+    <string name="other">Еще</string>
 
     <string-array name="games_category">
         <item>all</item>

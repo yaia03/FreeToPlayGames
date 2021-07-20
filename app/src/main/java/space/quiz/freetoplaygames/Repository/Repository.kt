@@ -31,4 +31,14 @@ class Repository {
         Log.d("Response", RetrofitInstance.api.getCategory(category).toString())
         return RetrofitInstance.api.getCategory(category)
     }
+
+    suspend fun getPlatformAndCategory(platform: String, category: String): Response<List<Game>>{
+        Log.d("Response", RetrofitInstance.api.getPlatformAndCategory(platform, category).toString())
+        return RetrofitInstance.api.getPlatformAndCategory(platform, category)
+    }
+
+    suspend fun getPlatform(platform: String): Response<List<Game>>{
+        Log.d("Response", RetrofitInstance.api.getPlatform(platform).toString())
+        return RetrofitInstance.api.getPlatform(platform)
+    }
 }

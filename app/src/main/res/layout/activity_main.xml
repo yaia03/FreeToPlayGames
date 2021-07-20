@@ -13,6 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/orange"
         android:elevation="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout

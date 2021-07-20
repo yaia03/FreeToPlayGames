@@ -23,4 +23,11 @@ interface SimpleApi {
     @GET("api/games?")
     suspend fun getCategory(@Query("category") category: String): Response<List<Game>>
 
+    @GET("api/games?")
+    suspend fun getPlatformAndCategory(@Query("platform") platform: String,
+                                       @Query("category") category: String): Response<List<Game>>
+
+    @GET("api/games?")
+    suspend fun getPlatform(@Query("platform") platform: String): Response<List<Game>>
+
 }

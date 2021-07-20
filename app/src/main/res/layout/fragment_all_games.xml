@@ -12,40 +12,98 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/all_games_fragment_pc_rv"
+        app:layout_constraintTop_toTopOf="parent"
         android:text="@string/pc_games_title"
         android:textSize="25sp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="10dp"
         />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/all_games_fragment_shimmer_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/all_games_fragment_pc_title"
+        android:layout_marginTop="8dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <include layout="@layout/shimmer_game_item"/>
+            <include layout="@layout/shimmer_game_item"/>
+            <include layout="@layout/shimmer_game_item"/>
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="8dp"
         android:id="@+id/all_games_fragment_pc_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/all_games_fragment_browser_rv"
+        app:layout_constraintTop_toBottomOf="@+id/all_games_fragment_pc_title"
         android:orientation="horizontal"
+        android:visibility="invisible"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/all_games_fragment_pc_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:textSize="20sp"
+        android:text="@string/other"
+        android:layout_marginTop="150dp"
+        android:padding="5dp"/>
 
     <TextView
         android:id="@+id/all_games_fragment_browser_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/all_games_fragment_browser_rv"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="230dp"
         android:text="@string/browser_games_title"
         android:textSize="25sp"
-        android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
         />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/all_games_fragment_shimmer_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/all_games_fragment_browser_title"
+        android:layout_marginTop="8dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <include layout="@layout/shimmer_game_item"/>
+            <include layout="@layout/shimmer_game_item"/>
+            <include layout="@layout/shimmer_game_item"/>
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/all_games_fragment_browser_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/all_games_fragment_pc_rv"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/all_games_fragment_browser_title"
         android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/all_games_fragment_browser_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:textSize="20sp"
+        android:text="@string/other"
+        android:layout_marginTop="150dp"
+        android:padding="5dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
