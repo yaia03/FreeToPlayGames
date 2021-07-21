@@ -11,21 +11,22 @@ import space.quiz.freetoplaygames.Repository.Repository
 class CategoryGameViewModel(private val repository: Repository): ViewModel() {
     var categoryResponse: MutableLiveData<Response<List<Game>>> = MutableLiveData()
     var categoryPosition: MutableLiveData<String> = MutableLiveData()
+    var platformPosition: MutableLiveData<String> = MutableLiveData()
 
-    fun getCategory(category: String?): MutableLiveData<Response<List<Game>>>{
-        if (category != null)
-            loadCategory(category)
-        else
+    fun getCategory(category: String, platform: String): MutableLiveData<Response<List<Game>>>{
+        if (category == "all" && platform == "all")
             loadAllGames()
+        else if (category != "all" && platform == "all")
+            loadCategory(category)
+        else if (category == "all" && platform != "all")
+            loadPlatform(platform)
+        else
+            loadPlatformAndCategory(platform, category)
 
         return categoryResponse
     }
-//
-//    fun getPlatform(platform: String): MutableLiveData<Response<List<Game>>>{
-//
-//    }
 
-    fun loadCategory(category: String){
+    private fun loadCategory(category: String){
         viewModelScope.launch {
             val response = repository.getCategory(category)
             categoryResponse.postValue(response)
@@ -52,5 +53,4 @@ class CategoryGameViewModel(private val repository: Repository): ViewModel() {
             categoryResponse.postValue(response)
         }
     }
-
 }

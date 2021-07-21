@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.ms.square.android.expandabletextview.ExpandableTextView
+import space.quiz.freetoplaygames.MainActivity
 import space.quiz.freetoplaygames.Models.Game
 import space.quiz.freetoplaygames.Models.Screenshot
 import space.quiz.freetoplaygames.R
@@ -132,23 +133,35 @@ class GameInfoFragment : Fragment() {
 
     private fun createRv(list: List<Screenshot>, rv: RecyclerView){
         val adapter = ScreenshotAdapter(list, object : ScreenOnClickListener {
-            override fun onClicked(screen: Screenshot) {}
+            override fun onClicked(screen: Screenshot) {
+                var screenUrlList = arrayListOf<String>()
+                list.forEach{
+                    screenUrlList.add(it.image)
+                }
+                var bundle = Bundle().apply {
+                    Log.d("bundle", screenUrlList.toString())
+                    putStringArrayList("SCREENS", screenUrlList)
+                    putInt("POSITION", list.indexOf(screen))
+                }
+                (activity as MainActivity).navController.navigate(R.id.action_gameInfoFragment_to_screenFragment, bundle)
+            }
         }, requireContext())
         rv.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         rv.adapter = adapter
     }
 
     private fun openFragment(category: String){
-        val fragment = CategoryGamesFragment()
+//        val fragment = CategoryGamesFragment()
         val args = Bundle().apply {
             putString("CATEGORY", category.toLowerCase())
         }
-        fragment.arguments = args
-        parentFragmentManager
-            .beginTransaction()
-            .addToBackStack(null)
-            .replace(R.id.main_fragment_container, fragment)
-            .commit()
+        (activity as MainActivity).navController.navigate(R.id.action_gameInfoFragment_to_categoryGamesFragment2, args)
+//        fragment.arguments = args
+//        parentFragmentManager
+//            .beginTransaction()
+//            .addToBackStack(null)
+//            .replace(R.id.main_fragment_container, fragment)
+//            .commit()
     }
 
     private fun openWebsite(uri: String){

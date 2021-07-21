@@ -64,4 +64,10 @@
         <item>horror</item>
         <item>mmorts</item>
     </string-array>
+
+    <string-array name="games_platform">
+        <item>all</item>
+        <item>pc</item>
+        <item>browser</item>
+    </string-array>
 </resources>

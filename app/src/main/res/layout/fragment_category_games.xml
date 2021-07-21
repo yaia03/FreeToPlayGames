@@ -8,11 +8,20 @@
     >
 
     <Spinner
-        android:id="@+id/category_spinner"
-        android:layout_width="150dp"
+        android:id="@+id/platform_spinner"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        />w\
+
+    <Spinner
+        android:id="@+id/category_spinner"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/platform_spinner"
+        android:layout_marginStart="136dp"
         android:layout_marginTop="16dp"
         />
 

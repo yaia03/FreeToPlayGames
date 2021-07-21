@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/allGamesFragment">
+
+    <fragment
+        android:id="@+id/allGamesFragment"
+        android:name="space.quiz.freetoplaygames.UI.AllGamesFragment"
+        android:label="fragment_all_games"
+        tools:layout="@layout/fragment_all_games" >
+        <action
+            android:id="@+id/action_allGamesFragment_to_gameInfoFragment"
+            app:destination="@id/gameInfoFragment" />
+        <action
+            android:id="@+id/action_allGamesFragment_to_categoryGamesFragment"
+            app:destination="@id/categoryGamesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameInfoFragment"
+        android:name="space.quiz.freetoplaygames.UI.GameInfoFragment"
+        android:label="fragment_game_info"
+        tools:layout="@layout/fragment_game_info" >
+        <action
+            android:id="@+id/action_gameInfoFragment_to_categoryGamesFragment2"
+            app:destination="@id/categoryGamesFragment" />
+        <action
+            android:id="@+id/action_gameInfoFragment_to_screenFragment"
+            app:destination="@id/screenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryGamesFragment"
+        android:name="space.quiz.freetoplaygames.UI.CategoryGamesFragment"
+        android:label="fragment_category_games"
+        tools:layout="@layout/fragment_category_games" >
+        <action
+            android:id="@+id/action_categoryGamesFragment_to_gameInfoFragment"
+            app:destination="@id/gameInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/screenFragment"
+        android:name="space.quiz.freetoplaygames.UI.ScreenFragment"
+        android:label="fragment_screen"
+        tools:layout="@layout/fragment_screen" />
+</navigation>

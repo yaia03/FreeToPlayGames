@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import space.quiz.freetoplaygames.MainActivity
 import space.quiz.freetoplaygames.Models.Game
 import space.quiz.freetoplaygames.R
 import space.quiz.freetoplaygames.Repository.Repository
@@ -48,6 +49,13 @@ class AllGamesFragment : Fragment() {
         adapterPC = createAdapter(gamesListPc)
         createRV(mBinding.allGamesFragmentBrowserRv, adapterBrowser)
         createRV(mBinding.allGamesFragmentPcRv, adapterPC)
+
+        mBinding.pcOther.setOnClickListener(View.OnClickListener {
+            openCategoryGames("pc")
+        })
+        mBinding.browserOther.setOnClickListener(View.OnClickListener {
+            openCategoryGames("browser")
+        })
     }
 
     private fun initFunc(){
@@ -86,6 +94,19 @@ class AllGamesFragment : Fragment() {
         rv.adapter = adapter
     }
 
+    private fun openCategoryGames(platform: String){
+//        val fragment = CategoryGamesFragment()
+        val arg = Bundle().apply {
+            putString("PLATFORM", platform)
+        }
+//        fragment.arguments = arg
+//        parentFragmentManager.beginTransaction()
+//                .addToBackStack(null)
+//                .replace(R.id.main_fragment_container, fragment)
+//                .commit()
+        (activity as MainActivity).navController.navigate(R.id.action_allGamesFragment_to_categoryGamesFragment, arg)
+    }
+
     private fun createAdapter(list: List<Game>): GamesAdapter{
         val adapter = GamesAdapter(list, object : GameOnClickListener {
             override fun onClicked(game: Game) {
@@ -96,16 +117,17 @@ class AllGamesFragment : Fragment() {
     }
 
     private fun openFragment(game: Game){
-        val fragment = GameInfoFragment()
-        val args = Bundle().apply {
-            putInt("GAME_ID", game.id)
-        }
-        fragment.arguments = args
-        parentFragmentManager
-            .beginTransaction()
-            .addToBackStack(null)
-            .replace(R.id.main_fragment_container, fragment)
-            .commit()
+//            val fragment = GameInfoFragment()
+            val args = Bundle().apply {
+                putInt("GAME_ID", game.id)
+            }
+//            fragment.arguments = args
+//            parentFragmentManager
+//                    .beginTransaction()
+//                    .addToBackStack(null)
+//                    .replace(R.id.main_fragment_container, fragment)
+//                    .commit()
+        (activity as MainActivity).navController.navigate(R.id.action_allGamesFragment_to_gameInfoFragment, args)
     }
 
     private fun startShimmer(){

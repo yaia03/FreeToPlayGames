@@ -6,11 +6,14 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.annotation.Nullable
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import space.quiz.freetoplaygames.MainActivity
 import space.quiz.freetoplaygames.Models.Game
 import space.quiz.freetoplaygames.R
 import space.quiz.freetoplaygames.Repository.Repository
@@ -26,6 +29,10 @@ class CategoryGamesFragment : Fragment() {
     private lateinit var viewModel: CategoryGameViewModel
     private lateinit var gamesList: List<Game>
     private lateinit var adapter: CategoryAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,11 +52,23 @@ class CategoryGamesFragment : Fragment() {
         gamesList = arrayListOf()
         createRv(gamesList, mBinding.categoryRv)
 
+        viewModel.categoryResponse.observe(this, Observer {
+            if (it.isSuccessful){
+                Log.d("Response", it.body().toString())
+                gamesList = it.body()!!
+
+                adapter.filterList(gamesList)
+                mBinding.categoryRv.visibility = View.VISIBLE
+                mBinding.categoryShimmer.visibility = View.INVISIBLE
+            }
+        })
+
         viewModel.categoryPosition.observe(this, Observer {
-            if (it != "all")
-                loadCategory(it)
-            else
-                loadCategory(null)
+            loadCategory(it, mBinding.platformSpinner.selectedItem.toString())
+        })
+
+        viewModel.platformPosition.observe(this, Observer {
+            loadCategory(mBinding.categorySpinner.selectedItem.toString(), it)
         })
     }
 
@@ -83,8 +102,8 @@ class CategoryGamesFragment : Fragment() {
                 .get(CategoryGameViewModel::class.java)
     }
 
-    private fun loadCategory(category: String?){
-        viewModel.getCategory(category)
+    private fun loadCategory(category: String, platform: String){
+        viewModel.getCategory(category, platform)
         viewModel.categoryResponse.observe(viewLifecycleOwner, Observer { response ->
             if (response.isSuccessful){
                 Log.d("Response", response.body().toString())
@@ -111,32 +130,60 @@ class CategoryGamesFragment : Fragment() {
         var categories = resources.getStringArray(R.array.games_category)
         val arrayAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, categories)
         mBinding.categorySpinner.adapter = arrayAdapter
-        if (arguments?.getString("CATEGORY") != null){
-            mBinding.categorySpinner.setSelection(arrayAdapter.getPosition(arguments?.getString("CATEGORY")))
+
+        val platforms = resources.getStringArray(R.array.games_platform)
+        val arrayAdapterPlatform = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, platforms)
+        mBinding.platformSpinner.adapter = arrayAdapterPlatform
+
+        when {
+            arguments?.getString("CATEGORY") != null -> {
+                mBinding.categorySpinner.setSelection(arrayAdapter.getPosition(arguments?.getString("CATEGORY")))
+            }
+            arguments?.getString("PLATFORM") != null -> {
+                mBinding.platformSpinner.setSelection(arrayAdapterPlatform.getPosition(arguments?.getString("PLATFORM")))
+            }
+            else -> {
+                mBinding.categorySpinner.setSelection(arrayAdapter.getPosition(viewModel.categoryPosition.value))
+                mBinding.platformSpinner.setSelection(arrayAdapterPlatform.getPosition(viewModel.platformPosition.value))
+            }
         }
-        else
-            mBinding.categorySpinner.setSelection(arrayAdapter.getPosition(viewModel.categoryPosition.value))
+        spinnerSettings(categories, platforms)
+    }
+
+    private fun spinnerSettings(category: Array<String>, platforms: Array<String>){
         mBinding.categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                viewModel.categoryPosition.postValue(categories[position])
+                viewModel.categoryPosition.postValue(category[position])
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
+
+        mBinding.platformSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.platformPosition.postValue(platforms[position])
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
     }
 
     private fun openFragment(game: Game){
-        val fragment = GameInfoFragment()
+//        val fragment = GameInfoFragment()
         val args = Bundle().apply {
             putInt("GAME_ID", game.id)
         }
-        fragment.arguments = args
-        parentFragmentManager
-                .beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.main_fragment_container, fragment)
-                .commit()
+        (activity as MainActivity).navController.navigate(R.id.action_categoryGamesFragment_to_gameInfoFragment, args)
+//        fragment.arguments = args
+//        parentFragmentManager
+//                .beginTransaction()
+//                .addToBackStack(null)
+//                .replace(R.id.main_fragment_container, fragment)
+//                .commit()
     }
 
     private fun filter(text: String){
